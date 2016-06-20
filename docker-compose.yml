@@ -1,0 +1,22 @@
+version: '2'
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 15432:5432
+  web:
+    build:
+      context: .
+      args:
+        uid: ${UID}
+    user: web
+    command: bash -c "mix do deps.get, compile && mix phoenix.server"
+    ports:
+      - 4000:4000
+    volumes:
+      - "./app:/home/web/app"
+    depends_on:
+      - db
